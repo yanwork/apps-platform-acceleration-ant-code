@@ -1,0 +1,4 @@
+dependencies {
+    compile project(":projects:version")
+    compile project(":projects:list")
+}
