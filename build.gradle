@@ -10,4 +10,16 @@ subprojects {
             java.srcDir 'src'
         }
     }
+
+    group 'org.apache.ivy.example'
+    version '1.0-dev'
+
+    uploadArchives {
+        repositories {
+            ivy {
+                ivyPattern "$rootDir/repository/shared/[organisation]/[module]/[revision]/ivys/[artifact](-[classifier]).[ext]"
+                artifactPattern "$rootDir/repository/shared/[organisation]/[module]/[revision]/[ext]s/[artifact](-[classifier]).[ext]"
+            }
+        }
+    }
 }
