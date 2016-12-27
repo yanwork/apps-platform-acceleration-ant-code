@@ -12,4 +12,12 @@
     </parent>
 
     <artifactId>version</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
