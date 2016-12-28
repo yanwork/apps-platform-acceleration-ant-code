@@ -24,30 +24,31 @@ subprojects {
     }
 }
 
-task("dependenciesGraphDot").doLast {
-    delete("build/dependenciesGraph")
-    mkdir("build/dependenciesGraph")
+task dependenciesGraphDot {
 
-    def dotFile = file("build/dependenciesGraph/graph.dot")
+    mustRunAfter "clean"
 
-    dotFile << "digraph dependencies {"
+    def graphBuildDir = "build/dependenciesGraph"
+    def dotFile = file "$graphBuildDir/graph.dot"
 
-    project.subprojects.forEach { Project subProject ->
-        Configuration compileConfig = subProject.configurations["compile"]
+    doLast {
+        delete graphBuildDir
+        mkdir graphBuildDir
 
-        compileConfig.dependencies.forEach {
-            if (! it.respondsTo("getDependencyProject")) {
-                return
-            }
+        dotFile << "digraph dependencies {"
 
-            dotFile << "  $subProject.name -> $it.dependencyProject.name"
+        project.subprojects.forEach { Project subProject ->
+            Configuration compileConfig = subProject.configurations["compile"]
+
+            compileConfig
+                .dependencies
+                .grep { it.respondsTo("getDependencyProject") }
+                .forEach { dotFile << "  $subProject.name -> $it.dependencyProject.name" }
         }
+
+        dotFile << "}\n"
     }
-
-    dotFile << "}\n"
 }
-
-dependenciesGraphDot.mustRunAfter("clean")
 
 task dependenciesGraph(dependsOn: "dependenciesGraphDot", type: Exec) {
     workingDir "$project.buildDir/dependenciesGraph"
