@@ -23,3 +23,37 @@ subprojects {
         }
     }
 }
+
+task("dependenciesGraphDot").doLast {
+    delete("build/dependenciesGraph")
+    mkdir("build/dependenciesGraph")
+
+    def dotFile = file("build/dependenciesGraph/graph.dot")
+
+    dotFile << "digraph dependencies {"
+
+    project.subprojects.forEach { Project subProject ->
+        Configuration compileConfig = subProject.configurations["compile"]
+
+        compileConfig.dependencies.forEach {
+            if (! it.respondsTo("getDependencyProject")) {
+                return
+            }
+
+            dotFile << "  $subProject.name -> $it.dependencyProject.name"
+        }
+    }
+
+    dotFile << "}\n"
+}
+
+dependenciesGraphDot.mustRunAfter("clean")
+
+task dependenciesGraph(dependsOn: "dependenciesGraphDot", type: Exec) {
+    workingDir "$project.buildDir/dependenciesGraph"
+    commandLine "dot", "-O", "-Tpng", "graph.dot"
+}
+
+task clean(type: Delete) {
+    delete "build"
+}
