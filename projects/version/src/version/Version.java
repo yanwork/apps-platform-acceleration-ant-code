@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.Map;
 import java.util.HashMap;
 
+@SuppressWarnings("unchecked")
 public final class Version {
     static {
         versions = new HashMap();

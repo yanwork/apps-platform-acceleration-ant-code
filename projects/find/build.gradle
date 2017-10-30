@@ -1,0 +1,7 @@
+dependencies {
+    compile project(":projects:version")
+    compile project(":projects:list")
+
+    compile "commons-collections:commons-collections:3.1"
+    compile "commons-cli:commons-cli:1.0"
+}

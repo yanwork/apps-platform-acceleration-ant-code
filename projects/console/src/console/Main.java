@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.lang.reflect.Method;
 
 
+@SuppressWarnings("unchecked")
 public final class Main {
     private static final Collection QUIT_COMMANDS = 
         Arrays.asList(new String[] {"quit", "q", "exit"});

@@ -1,0 +1,15 @@
+subprojects {
+    apply plugin: "java"
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceSets {
+        main {
+            java.srcDir 'src'
+        }
+    }
+}
+
+wrapper.gradleVersion = '4.0'

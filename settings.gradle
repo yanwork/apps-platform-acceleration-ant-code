@@ -1,0 +1,8 @@
+rootProject.name = "ant-example"
+
+include ":projects:console"
+include ":projects:find"
+include ":projects:list"
+include ":projects:size"
+include ":projects:sizewhere"
+include ":projects:version"

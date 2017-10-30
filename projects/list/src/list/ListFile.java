@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.io.File;
 
+@SuppressWarnings("unchecked")
 public final class ListFile {
   static {
     Version.register("list");

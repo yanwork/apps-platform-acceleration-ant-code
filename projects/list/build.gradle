@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":projects:version")
+
+    compile "commons-cli:commons-cli:1.0"
+}
