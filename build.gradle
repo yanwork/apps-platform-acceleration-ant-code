@@ -1,3 +1,38 @@
+task dependenciesGraphDot {
+
+    mustRunAfter "clean"
+
+    def graphBuildDir = "build/dependenciesGraph"
+    def dotFile = file "$graphBuildDir/graph.dot"
+
+    doLast {
+        delete graphBuildDir
+        mkdir graphBuildDir
+
+        dotFile << "digraph dependencies {"
+
+        project.subprojects.forEach { Project subProject ->
+            Configuration compileConfig = subProject.configurations["compile"]
+
+            compileConfig
+                    .dependencies
+                    .grep { it.respondsTo("getDependencyProject") }
+                    .forEach { dotFile << "  $subProject.name -> $it.dependencyProject.name" }
+        }
+
+        dotFile << "}\n"
+    }
+}
+
+task dependenciesGraph(dependsOn: "dependenciesGraphDot", type: Exec) {
+    workingDir "$project.buildDir/dependenciesGraph"
+    commandLine "dot", "-O", "-Tpng", "graph.dot"
+}
+
+task clean(type: Delete) {
+    delete "build"
+}
+
 subprojects {
     apply plugin: "java"
 
@@ -8,6 +43,18 @@ subprojects {
     sourceSets {
         main {
             java.srcDir 'src'
+        }
+    }
+
+    group 'org.apache.ivy.example'
+    version '1.0-dev'
+
+    uploadArchives {
+        repositories {
+            ivy {
+                ivyPattern "$rootDir/repository/shared/[organisation]/[module]/[revision]/ivys/[artifact](-[classifier]).[ext]"
+                artifactPattern "$rootDir/repository/shared/[organisation]/[module]/[revision]/[ext]s/[artifact](-[classifier]).[ext]"
+            }
         }
     }
 }
